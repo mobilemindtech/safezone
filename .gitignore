@@ -1,0 +1,9 @@
+target/
+.bloop/
+.metals/
+.bsp/
+project/target/
+project/project/
+*.class
+.idea/
+.claude/settings.local.json
