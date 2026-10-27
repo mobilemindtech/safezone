@@ -1,4 +1,4 @@
-package safezone
+package br.com.mobilemind.safezone
 
 import scala.language.experimental.captureChecking
 
@@ -34,6 +34,15 @@ class SafeZoneRuntimeSuite extends munit.FunSuite:
 
   test("objects are readable inside the zone") {
     val sum = SafeZone { sz ?=>
+      val a = sz.alloc(new Small(20))
+      val b = sz.alloc(new Small(22))
+      a.v + b.v
+    }
+    assertEquals(sum, 42L)
+  }
+
+  test("the `safezone` alias package allocates in the same arena") {
+    val sum = _root_.safezone.SafeZone { sz ?=>
       val a = sz.alloc(new Small(20))
       val b = sz.alloc(new Small(22))
       a.v + b.v

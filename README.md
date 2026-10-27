@@ -8,7 +8,7 @@ Scala Native + Scala 3 toolchain, without forking either.
 
 ```scala
 import scala.language.experimental.captureChecking
-import safezone.SafeZone
+import br.com.mobilemind.safezone.SafeZone
 
 val sum = SafeZone { sz ?=>
   val a = sz.alloc(new Point(1, 2))   // allocated in the zone's arena
@@ -33,11 +33,15 @@ newer (tested with 3.10.0). Not published to a repository yet; run
 
 ```scala
 // build.sbt of a Scala Native project
-libraryDependencies += "io.github.safezone" %%% "safezone-library" % "0.1.0-SNAPSHOT"
+libraryDependencies += "br.com.mobilemind" %%% "safezone-library" % "0.1.0-SNAPSHOT"
 ```
 
 Every file that uses zones needs
 `import scala.language.experimental.captureChecking`.
+
+The API lives in `br.com.mobilemind.safezone`; the short package `safezone`
+re-exports it, so `import safezone.*` (or `import safezone.SafeZone`) works
+too.
 
 - `SafeZone { sz ?=> ... }` opens a zone, runs the block and frees
   everything allocated in it when the block ends, normally or by exception.

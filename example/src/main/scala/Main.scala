@@ -1,6 +1,6 @@
 import scala.language.experimental.captureChecking
 
-import safezone.SafeZone
+import br.com.mobilemind.safezone.SafeZone
 
 final class Vec3(val x: Int, val y: Int, val z: Int):
   override def toString: String = s"($x, $y, $z)"

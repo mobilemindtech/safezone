@@ -1,4 +1,4 @@
-package safezone
+package br.com.mobilemind.safezone
 
 import scala.language.experimental.captureChecking
 

@@ -1,7 +1,7 @@
 import scala.scalanative.build.{GC, Mode}
 
 ThisBuild / scalaVersion := "3.10.0"
-ThisBuild / organization := "io.github.safezone"
+ThisBuild / organization := "br.com.mobilemind"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
 lazy val library = project

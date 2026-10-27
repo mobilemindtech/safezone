@@ -1,4 +1,4 @@
-package safezone
+package br.com.mobilemind.safezone
 
 import dotty.tools.dotc.Driver
 import dotty.tools.dotc.reporting.{Reporter, StoreReporter}
@@ -33,9 +33,9 @@ class SafeZoneCaptureCheckSuite extends munit.FunSuite:
     new Driver().process(args, reporter, null)
     reporter
 
-  private def wrap(body: String): String =
+  private def wrap(body: String, imports: String = "br.com.mobilemind.safezone.SafeZone"): String =
     s"""import scala.language.experimental.captureChecking
-       |import safezone.SafeZone
+       |import $imports
        |
        |final class Vec3(val x: Int, val y: Int, val z: Int)
        |
@@ -76,6 +76,29 @@ class SafeZoneCaptureCheckSuite extends munit.FunSuite:
       |      p
       |    }
       |""".stripMargin))
+    assert(reporter.hasErrors)
+    assert(reporter.allErrors.exists(_.message.contains("outlives its scope")))
+  }
+
+  test("pos: the `safezone` alias package exposes the same API") {
+    val reporter = compile(wrap("""
+      |  def run(): Int =
+      |    SafeZone { sz ?=>
+      |      val p = sz.alloc(new Vec3(1, 2, 3))
+      |      p.x + p.y + p.z
+      |    }
+      |""".stripMargin, imports = "safezone.*"))
+    assert(!reporter.hasErrors, reporter.allErrors.map(_.message).mkString("\n"))
+  }
+
+  test("neg: escapes are still rejected through the `safezone` alias package") {
+    val reporter = compile(wrap("""
+      |  def run(): Vec3 =
+      |    SafeZone { sz ?=>
+      |      val p = sz.alloc(new Vec3(1, 2, 3))
+      |      p
+      |    }
+      |""".stripMargin, imports = "safezone.*"))
     assert(reporter.hasErrors)
     assert(reporter.allErrors.exists(_.message.contains("outlives its scope")))
   }
